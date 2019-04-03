@@ -1,0 +1,173 @@
+{
+    "apiVersion": "v1",
+    "kind": "Template",
+    "labels": {
+        "template": "powerai-pytorch-template"
+    },
+    "message": "The following service(s) have been created in your project: ${POWERAI_SERVICE_NAME}.\n\n       For more information about using this template, including OpenShift considerations, see https://hub.docker.com/ibmcom/powerai/.",
+    "metadata": {
+        "annotations": {
+            "description": "PowerAI pytorch service, without persistent storage. For more information about using this template, see https://hub.docker.com/ibmcom/powerai/.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
+            "iconClass": "icon-datagrid",
+            "openshift.io/display-name": "PowerAI (Pytorch)",
+            "openshift.io/documentation-url": "https://hub.docker.com/ibmcom/powerai/",
+            "openshift.io/long-description": "This template provides a standalone PowerAI pytorch server.",
+            "openshift.io/provider-display-name": "IBM",
+            "openshift.io/support-url": "https://access.redhat.com",
+            "tags": "pytorch,powerai,ppc64le"
+        },
+        "name": "powerai-pytorch"
+    },
+    "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "DeploymentConfig",
+            "metadata": {
+                "annotations": {
+                    "template.alpha.openshift.io/wait-for-ready": "true"
+                },
+                "name": "${POWERAI_SERVICE_NAME}"
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "name": "${POWERAI_SERVICE_NAME}"
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "${POWERAI_SERVICE_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "capabilities": {},
+                                "image": " ",
+				"command": ["/bin/bash"],
+				"args": ["-i", "-c", "/opt/anaconda3/bin/pytorch-test"],
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "bash",
+                                            "-c",
+                                            "nvidia-smi"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 120,
+                                    "timeoutSeconds": 10
+                                },
+                                "name": "powerai-pytorch",
+                                "readinessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "bash",
+                                            "-c",
+                                            "nvidia-smi"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "timeoutSeconds": 1
+                                },
+        			"seLinuxOptions": {
+				    "type": "nvidia_container_t"
+				},
+                                "env": [
+                                    {
+                                        "name": "LICENSE",
+                                        "value": "yes"
+                                    },
+                                    {
+                                        "name": "ACTIVATE",
+                                        "value": "pytorch"
+                                    },
+                                    {
+                                        "name": "IBM_POWERAI_LICENSE_ACCEPT",
+                                        "value": "yes"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "${MEMORY_LIMIT}",
+                                        "nvidia.com/gpu": "${GPU_LIMIT}"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {},
+                                    "privileged": false
+                                },
+                                "terminationMessagePath": "/dev/termination-log"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always",
+      			"serviceAccount": "mysvcacct",
+      			"serviceAccountName": "mysvcacct"
+                    }
+                },
+                "triggers": [
+                    {
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "powerai-pytorch"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "powerai:${POWERAI_VERSION}",
+                                "namespace": "${NAMESPACE}"
+                            },
+                            "lastTriggeredImage": ""
+                        },
+                        "type": "ImageChange"
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ]
+            },
+            "status": {}
+        }
+    ],
+    "parameters": [
+        {
+            "description": "Minimum amount of memory the container can use.",
+            "displayName": "Memory Limit",
+            "name": "MEMORY_LIMIT",
+            "required": true,
+            "value": "4Gi"
+        },
+        {
+            "description": "Minimum number of GPUs the container can use.",
+            "displayName": "GPU Limit",
+            "name": "GPU_LIMIT",
+            "required": true,
+            "value": "1"
+        },
+        {
+            "description": "The OpenShift Namespace where the ImageStream resides.",
+            "displayName": "Namespace",
+            "name": "NAMESPACE",
+            "value": "openshift"
+        },
+        {
+            "description": "The name of the OpenShift Service exposed for PowerAI.",
+            "displayName": "Database Service Name",
+            "name": "POWERAI_SERVICE_NAME",
+            "required": true,
+            "value": "powerai-pytorch"
+        },
+        {
+            "description": "Version of PowerAI to be used (1.6.0 or latest).",
+            "displayName": "Version of PowerAI Image",
+            "name": "POWERAI_VERSION",
+            "required": true,
+            "value": "1.6.0-pytorch"
+        }
+    ]
+}
+
