@@ -3,7 +3,7 @@ How to run PowerAI on OpenShift
 1) Clone this repository
 
 ```
-git clone https://github.ibm.com/redstack-power/demo-powerai-base
+git clone https://github.com/manojnkumar/powerai-base-openshift
 ```
 
 2) Install CUDA and other software as described in PowerAI docs.
@@ -30,7 +30,7 @@ Comment out more lines from udev rules:
 
 5) Create an imagestream in the 'openshift' project, using this file.
 ```
-$ cd demo-powerai-base
+$ cd powerai-base-openshift
 $ oc project openshift
 $ oc create -f powerai-base.yml
 ```
