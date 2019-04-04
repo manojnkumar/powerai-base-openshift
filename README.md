@@ -35,19 +35,19 @@ $ oc project openshift
 $ oc create -f powerai-base.yml
 ```
 
-5) Create a project, add a service account in the project (mysvcacct)
+6) Create a project, add a service account in the project (mysvcacct)
 ```
 $  oc new-project test3
 $  oc create serviceaccount mysvcacct -n test3
 ```
 
-6) Give it privileges:
+7) Give it privileges:
 ```
 $ oc adm policy add-scc-to-user anyuid system:serviceaccount:test3:mysvcacct
 $ oc adm policy add-scc-to-user privileged system:serviceaccount:test3:mysvcacct
 ```
 
-7) Edit the deployment config file, and reference the service account. Use the appropriate templatee for the framework you are interested.
+8) Edit the deployment config file, and reference the service account. Use the appropriate templatee for the framework you are interested.
 
 For tensorflow
 ```
