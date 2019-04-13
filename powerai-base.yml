@@ -19,7 +19,7 @@
             },
             "from": {
               "kind": "ImageStreamTag",
-              "name": "1.6.0-all-ubuntu18.04-py3-ppc64le_cloud"
+              "name": "1.6.0-all-ubuntu18.04-py3"
             },
             "name": "latest",
             "referencePolicy": {
@@ -51,13 +51,13 @@
               "iconClass": "icon-datagrid",
               "openshift.io/display-name": "PowerAI (1.6.0-tensorflow)",
               "openshift.io/provider-display-name": "IBM",
-              "supports": "powerai:1.6.0-tensorflow-ubuntu18.04-py3-ppc64le_cloud,powerai",
+              "supports": "powerai:1.6.0-tensorflow-ubuntu18.04-py3,powerai",
               "tags": "builder,powerai",
               "version": "1.6.0-tensorflow"
             },
             "from": {
               "kind": "DockerImage",
-              "name": "docker.io/ibmcom/powerai:1.6.0-tensorflow-ubuntu18.04-py3-ppc64le_cloud"
+              "name": "docker.io/ibmcom/powerai:1.6.0-tensorflow-ubuntu18.04-py3"
             },
             "name": "1.6.0-tensorflow",
             "referencePolicy": {
@@ -70,13 +70,13 @@
               "iconClass": "icon-datagrid",
               "openshift.io/display-name": "PowerAI (1.6.0-pytorch)",
               "openshift.io/provider-display-name": "IBM",
-              "supports": "powerai:1.6.0-pytorch-ubuntu18.04-py3-ppc64le_cloud,powerai",
+              "supports": "powerai:1.6.0-pytorch-ubuntu18.04-py3,powerai",
               "tags": "builder,powerai",
               "version": "1.6.0-pytorch"
             },
             "from": {
               "kind": "DockerImage",
-              "name": "docker.io/ibmcom/powerai:1.6.0-pytorch-ubuntu18.04-py3-ppc64le_cloud"
+              "name": "docker.io/ibmcom/powerai:1.6.0-pytorch-ubuntu18.04-py3"
             },
             "name": "1.6.0-pytorch",
             "referencePolicy": {
@@ -89,13 +89,13 @@
               "iconClass": "icon-datagrid",
               "openshift.io/display-name": "PowerAI (1.6.0-caffe)",
               "openshift.io/provider-display-name": "IBM",
-              "supports": "powerai:1.6.0-caffe-ubuntu18.04-py3-ppc64le_cloud,powerai",
+              "supports": "powerai:1.6.0-caffe-ubuntu18.04-py3,powerai",
               "tags": "builder,powerai",
               "version": "1.6.0-caffe"
             },
             "from": {
               "kind": "DockerImage",
-              "name": "docker.io/ibmcom/powerai:1.6.0-caffe-ubuntu18.04-py3-ppc64le_cloud"
+              "name": "docker.io/ibmcom/powerai:1.6.0-caffe-ubuntu18.04-py3"
             },
             "name": "1.6.0-caffe",
             "referencePolicy": {
