@@ -54,8 +54,8 @@
                                     "exec": {
                                         "command": [
                                             "bash",
-                                            "-c",
-                                            "nvidia-smi"
+                                            "-ci",
+                                            "conda info"
                                         ]
                                     },
                                     "initialDelaySeconds": 120,
@@ -66,8 +66,8 @@
                                     "exec": {
                                         "command": [
                                             "bash",
-                                            "-c",
-                                            "nvidia-smi"
+                                            "-ci",
+                                            "conda info"
                                         ]
                                     },
                                     "initialDelaySeconds": 5,
@@ -146,7 +146,7 @@
             "displayName": "GPU Limit",
             "name": "GPU_LIMIT",
             "required": true,
-            "value": "1"
+            "value": "0"
         },
         {
             "description": "The OpenShift Namespace where the ImageStream resides.",

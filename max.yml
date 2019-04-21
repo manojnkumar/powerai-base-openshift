@@ -1,0 +1,50 @@
+    {
+      "apiVersion": "v1",
+      "kind": "ImageStream",
+      "metadata": {
+        "annotations": {
+          "openshift.io/display-name": "Model Asset Exchange from IBM"
+        },
+        "name": "maximagecaptiongenerator"
+      },
+      "spec": {
+        "tags": [
+          {
+            "annotations": {
+              "description": "Run any MAX model for inference purposes.",
+              "iconClass": "icon-decisionserver",
+              "openshift.io/display-name": "MAX (Latest)",
+              "openshift.io/provider-display-name": "IBM",
+              "tags": "builder,maximagecaptiongenerator,ppc64le"
+            },
+            "from": {
+              "kind": "ImageStreamTag",
+              "name": "latest"
+            },
+            "name": "latest",
+            "referencePolicy": {
+              "type": "Local"
+            }
+          },
+          {
+            "annotations": {
+              "description": "Run the MAX Image Caption Generator.",
+              "iconClass": "icon-decisionserver",
+              "openshift.io/display-name": "MAX (Latest)",
+              "openshift.io/provider-display-name": "IBM",
+              "supports": "maximagecaptiongenerator:latest,maximagecaptiongenerator",
+              "tags": "builder,maximagecaptiongenerator",
+              "version": "lateest"
+            },
+            "from": {
+              "kind": "DockerImage",
+              "name": "registry.ng.bluemix.net/armadamultiarch/maximagecaptiongenerator:latest"
+            },
+            "name": "latest",
+            "referencePolicy": {
+              "type": "Local"
+            }
+          }
+        ]
+      }
+    }

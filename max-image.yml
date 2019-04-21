@@ -2,23 +2,63 @@
     "apiVersion": "v1",
     "kind": "Template",
     "labels": {
-        "template": "powerai-tensorflow-template"
+        "template": "maximage-template"
     },
-    "message": "The following service(s) have been created in your project: ${POWERAI_SERVICE_NAME}.\n\n       For more information about using this template, including OpenShift considerations, see https://hub.docker.com/ibmcom/powerai/.",
+    "message": "The following service(s) have been created in your project: ${MAX_SERVICE_NAME}.\n\n       For more information about using this template, including OpenShift considerations, see https://github.com/IBM/MAX-Image-Caption-Generator.",
     "metadata": {
         "annotations": {
-            "description": "PowerAI tensorflow service, without persistent storage. For more information about using this template, see https://hub.docker.com/ibmcom/powerai/.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
-            "iconClass": "icon-datagrid",
-            "openshift.io/display-name": "PowerAI (Tensorflow)",
-            "openshift.io/documentation-url": "https://hub.docker.com/ibmcom/powerai/",
-            "openshift.io/long-description": "This template provides a standalone PowerAI tensorflow server.",
+            "description": "MAX Inference  service, without persistent storage. For more information about using this template, see https://github.com/IBM/MAX-Image-Caption-Generator.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
+            "iconClass": "icon-decisionserver",
+            "openshift.io/display-name": "MAX Image Caption(Latest)",
+            "openshift.io/documentation-url": "https://github.com/IBM/MAX-Image-Caption-Generator",
+            "openshift.io/long-description": "This template provides a standalone MAX image caption generator.",
             "openshift.io/provider-display-name": "IBM",
-            "openshift.io/support-url": "https://access.redhat.com",
-            "tags": "tensorflow,powerai,ppc64le"
+            "openshift.io/support-url": "https://github.com/IBM/MAX-Image-Caption-Generator",
+            "tags": "latest,maximagecaptiongenerator,ppc64le"
         },
-        "name": "powerai-tensorflow"
+        "name": "maximage"
     },
     "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "name": "${MAX_SERVICE_NAME}"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "max-image",
+                        "nodePort": 0,
+                        "port": 5000,
+                        "protocol": "TCP",
+                        "targetPort": 5000
+                    }
+                ],
+                "selector": {
+                    "name": "${MAX_SERVICE_NAME}"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Route",
+            "metadata": {
+                "name": "${MAX_SERVICE_NAME}"
+            },
+            "spec": {
+                "host": "${APPLICATION_DOMAIN}",
+                "to": {
+                    "kind": "Service",
+                    "name": "${MAX_SERVICE_NAME}"
+                }
+            }
+        },
         {
             "apiVersion": "v1",
             "kind": "DeploymentConfig",
@@ -26,12 +66,12 @@
                 "annotations": {
                     "template.alpha.openshift.io/wait-for-ready": "true"
                 },
-                "name": "${POWERAI_SERVICE_NAME}"
+                "name": "${MAX_SERVICE_NAME}"
             },
             "spec": {
                 "replicas": 1,
                 "selector": {
-                    "name": "${POWERAI_SERVICE_NAME}"
+                    "name": "${MAX_SERVICE_NAME}"
                 },
                 "strategy": {
                     "type": "Recreate"
@@ -39,7 +79,7 @@
                 "template": {
                     "metadata": {
                         "labels": {
-                            "name": "${POWERAI_SERVICE_NAME}"
+                            "name": "${MAX_SERVICE_NAME}"
                         }
                     },
                     "spec": {
@@ -47,27 +87,23 @@
                             {
                                 "capabilities": {},
                                 "image": " ",
-				"command": ["/bin/bash"],
-				"args": ["-i", "-c", "/opt/anaconda3/bin/tensorflow-test"],
                                 "imagePullPolicy": "IfNotPresent",
                                 "livenessProbe": {
                                     "exec": {
                                         "command": [
-                                            "bash",
-                                            "-ci",
-                                            "conda info"
+                                            "conda",
+                                            "info"
                                         ]
                                     },
                                     "initialDelaySeconds": 120,
                                     "timeoutSeconds": 10
                                 },
-                                "name": "powerai-tensorflow",
+                                "name": "maximagecaptiongenerator",
                                 "readinessProbe": {
                                     "exec": {
                                         "command": [
-                                            "bash",
-                                            "-ci",
-                                            "conda info"
+                                            "conda",
+                                            "info"
                                         ]
                                     },
                                     "initialDelaySeconds": 5,
@@ -76,20 +112,6 @@
         			"seLinuxOptions": {
 				    "type": "nvidia_container_t"
 				},
-                                "env": [
-                                    {
-                                        "name": "LICENSE",
-                                        "value": "yes"
-                                    },
-                                    {
-                                        "name": "ACTIVATE",
-                                        "value": "tensorflow"
-                                    },
-                                    {
-                                        "name": "IBM_POWERAI_LICENSE_ACCEPT",
-                                        "value": "yes"
-                                    }
-                                ],
                                 "resources": {
                                     "limits": {
                                         "memory": "${MEMORY_LIMIT}",
@@ -104,9 +126,7 @@
                             }
                         ],
                         "dnsPolicy": "ClusterFirst",
-                        "restartPolicy": "Always",
-      			"serviceAccount": "mysvcacct",
-      			"serviceAccountName": "mysvcacct"
+                        "restartPolicy": "Always"
                     }
                 },
                 "triggers": [
@@ -114,11 +134,11 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "powerai-tensorflow"
+                                "maximagecaptiongenerator"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "name": "powerai:${POWERAI_VERSION}",
+                                "name": "maximagecaptiongenerator:${MAX_VERSION}",
                                 "namespace": "${NAMESPACE}"
                             },
                             "lastTriggeredImage": ""
@@ -155,18 +175,24 @@
             "value": "openshift"
         },
         {
-            "description": "The name of the OpenShift Service exposed for PowerAI.",
-            "displayName": "Database Service Name",
-            "name": "POWERAI_SERVICE_NAME",
+            "description": "The name of the OpenShift Service exposed for MAX Image Caption Generator.",
+            "displayName": "MAX Image Caption Generator Name",
+            "name": "MAX_SERVICE_NAME",
             "required": true,
-            "value": "powerai-tensorflow"
+            "value": "max-image"
         },
         {
-            "description": "Version of PowerAI to be used (1.6.0 or latest).",
-            "displayName": "Version of PowerAI Image",
-            "name": "POWERAI_VERSION",
+            "description": "The exposed hostname that will route to the max service, if left blank a value will be defaulted.",
+            "displayName": "Application Hostname",
+            "name": "APPLICATION_DOMAIN",
+            "value": ""
+        },
+        {
+            "description": "Version of MAX Image Caption Generatorto be used (latest).",
+            "displayName": "Version of MAX Image Caption Generator Image",
+            "name": "MAX_VERSION",
             "required": true,
-            "value": "1.6.0-tensorflow"
+            "value": "latest"
         }
     ]
 }
