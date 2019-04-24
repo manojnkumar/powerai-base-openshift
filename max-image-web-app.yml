@@ -2,21 +2,21 @@
     "apiVersion": "v1",
     "kind": "Template",
     "labels": {
-        "template": "max-image-template"
+        "template": "max-image-web-app-template"
     },
-    "message": "The following service(s) have been created in your project: ${MAX_SERVICE_NAME}.\n\n       For more information about using this template, including OpenShift considerations, see https://github.com/IBM/MAX-Image-Caption-Generator.",
+    "message": "The following service(s) have been created in your project: ${MAX_SERVICE_NAME}.\n\n       For more information about using this template, including OpenShift considerations, see https://github.com/IBM/MAX-Image-Caption-Generator-Web-App.",
     "metadata": {
         "annotations": {
-            "description": "MAX Inference  service, without persistent storage. For more information about using this template, see https://github.com/IBM/MAX-Image-Caption-Generator.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
+            "description": "MAX Image Caption Generator Web App. For more information about using this template, see https://github.com/IBM/MAX-Image-Caption-Generator-Web-App.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
             "iconClass": "icon-decisionserver",
-            "openshift.io/display-name": "MAX Image Caption(Latest)",
+            "openshift.io/display-name": "MAX Image Caption Web App",
             "openshift.io/documentation-url": "https://github.com/IBM/MAX-Image-Caption-Generator",
-            "openshift.io/long-description": "This template provides a standalone MAX image caption generator.",
+            "openshift.io/long-description": "This template provides a standalone MAX image caption generator Web App.",
             "openshift.io/provider-display-name": "IBM",
-            "openshift.io/support-url": "https://github.com/IBM/MAX-Image-Caption-Generator",
-            "tags": "latest,max-image,ppc64le"
+            "openshift.io/support-url": "https://github.com/IBM/MAX-Image-Caption-Generator-Web-App",
+            "tags": "web-app,max-image-web-app,ppc64le"
         },
-        "name": "max-image"
+        "name": "max-image-web-app"
     },
     "objects": [
         {
@@ -28,11 +28,10 @@
             "spec": {
                 "ports": [
                     {
-                        "name": "max-image",
-                        "nodePort": 0,
-                        "port": 5000,
+                        "name": "max-image-web-app",
+                        "port": 8088,
                         "protocol": "TCP",
-                        "targetPort": 5000
+                        "targetPort": 8088
                     }
                 ],
                 "selector": {
@@ -87,23 +86,25 @@
                             {
                                 "capabilities": {},
                                 "image": " ",
+                                "command": ["python"],
+                                "args": ["app.py", "--ml-endpoint=${MAX_IMAGE_URL}"],
                                 "imagePullPolicy": "IfNotPresent",
+                                "name": "max-image-web-app",
                                 "livenessProbe": {
                                     "exec": {
                                         "command": [
-                                            "conda",
-                                            "info"
+                                            "cat",
+                                            "/app/app.py"
                                         ]
                                     },
                                     "initialDelaySeconds": 120,
                                     "timeoutSeconds": 10
                                 },
-                                "name": "max-image",
                                 "readinessProbe": {
                                     "exec": {
                                         "command": [
-                                            "conda",
-                                            "info"
+                                            "cat",
+                                            "/app/app.py"
                                         ]
                                     },
                                     "initialDelaySeconds": 5,
@@ -134,7 +135,7 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "max-image"
+                                "max-image-web-app"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
@@ -175,11 +176,11 @@
             "value": "openshift"
         },
         {
-            "description": "The name of the OpenShift Service exposed for MAX Image Caption Generator.",
-            "displayName": "MAX Image Caption Generator Name",
+            "description": "The name of the OpenShift Service exposed for MAX Image Caption Generator Web App.",
+            "displayName": "MAX Image Caption Web App Name",
             "name": "MAX_SERVICE_NAME",
             "required": true,
-            "value": "max-image"
+            "value": "max-image-web-app"
         },
         {
             "description": "The exposed hostname that will route to the max service, if left blank a value will be defaulted.",
@@ -188,11 +189,18 @@
             "value": ""
         },
         {
-            "description": "Version of MAX Image Caption Generatorto be used (latest).",
-            "displayName": "Version of MAX Image Caption Generator Image",
+            "description": "Version of MAX Image Caption Generatorto be used (web-app).",
+            "displayName": "Version of MAX Image Caption Web App Image",
             "name": "MAX_VERSION",
             "required": true,
-            "value": "latest"
+            "value": "web-app"
+        },
+        {
+            "description": "The URL for the MAX Image Caption Generator service.",
+            "displayName": "MAX Image Caption URL",
+            "name": "MAX_IMAGE_URL",
+            "required": true,
+            "value": "http://"
         }
     ]
 }

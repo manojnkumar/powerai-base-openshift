@@ -5,7 +5,7 @@
         "annotations": {
           "openshift.io/display-name": "Model Asset Exchange from IBM"
         },
-        "name": "maximagecaptiongenerator"
+        "name": "max-image"
       },
       "spec": {
         "tags": [
@@ -15,7 +15,7 @@
               "iconClass": "icon-decisionserver",
               "openshift.io/display-name": "MAX (Latest)",
               "openshift.io/provider-display-name": "IBM",
-              "tags": "builder,maximagecaptiongenerator,ppc64le"
+              "tags": "builder,max-image,ppc64le"
             },
             "from": {
               "kind": "ImageStreamTag",
@@ -28,17 +28,36 @@
           },
           {
             "annotations": {
+              "description": "Run the MAX Image Caption Generator Web App.",
+              "iconClass": "icon-decisionserver",
+              "openshift.io/display-name": "MAX (Latest)",
+              "openshift.io/provider-display-name": "IBM",
+              "supports": "max-image:web-app,max-image",
+              "tags": "builder,max-image",
+              "version": "web-app"
+            },
+            "from": {
+              "kind": "DockerImage",
+              "name": "registry.ng.bluemix.net/armadamultiarch/max-image:web-app"
+            },
+            "name": "web-app",
+            "referencePolicy": {
+              "type": "Local"
+            }
+          },
+          {
+            "annotations": {
               "description": "Run the MAX Image Caption Generator.",
               "iconClass": "icon-decisionserver",
               "openshift.io/display-name": "MAX (Latest)",
               "openshift.io/provider-display-name": "IBM",
-              "supports": "maximagecaptiongenerator:latest,maximagecaptiongenerator",
-              "tags": "builder,maximagecaptiongenerator",
+              "supports": "max-image:latest,max-image",
+              "tags": "builder,max-image",
               "version": "lateest"
             },
             "from": {
               "kind": "DockerImage",
-              "name": "registry.ng.bluemix.net/armadamultiarch/maximagecaptiongenerator:latest"
+              "name": "registry.ng.bluemix.net/armadamultiarch/max-image:latest"
             },
             "name": "latest",
             "referencePolicy": {
