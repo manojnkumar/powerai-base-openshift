@@ -19,9 +19,9 @@
             },
             "from": {
               "kind": "ImageStreamTag",
-              "name": "latest"
+              "name": "caption"
             },
-            "name": "latest",
+            "name": "caption",
             "referencePolicy": {
               "type": "Local"
             }
@@ -38,7 +38,7 @@
             },
             "from": {
               "kind": "DockerImage",
-              "name": "registry.ng.bluemix.net/armadamultiarch/max-image:web-app"
+              "name": "docker.io/manojnkumar/max-image:web-app"
             },
             "name": "web-app",
             "referencePolicy": {
@@ -51,15 +51,15 @@
               "iconClass": "icon-decisionserver",
               "openshift.io/display-name": "MAX (Latest)",
               "openshift.io/provider-display-name": "IBM",
-              "supports": "max-image:latest,max-image",
+              "supports": "max-image:caption,max-image",
               "tags": "builder,max-image",
               "version": "lateest"
             },
             "from": {
               "kind": "DockerImage",
-              "name": "registry.ng.bluemix.net/armadamultiarch/max-image:latest"
+              "name": "docker.io/manojnkumar/max-image:caption"
             },
-            "name": "latest",
+            "name": "caption",
             "referencePolicy": {
               "type": "Local"
             }

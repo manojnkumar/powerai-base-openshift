@@ -9,12 +9,12 @@
         "annotations": {
             "description": "MAX Inference  service, without persistent storage. For more information about using this template, see https://github.com/IBM/MAX-Image-Caption-Generator.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
             "iconClass": "icon-decisionserver",
-            "openshift.io/display-name": "MAX Image Caption(Latest)",
+            "openshift.io/display-name": "MAX Image(Caption)",
             "openshift.io/documentation-url": "https://github.com/IBM/MAX-Image-Caption-Generator",
             "openshift.io/long-description": "This template provides a standalone MAX image caption generator.",
             "openshift.io/provider-display-name": "IBM",
             "openshift.io/support-url": "https://github.com/IBM/MAX-Image-Caption-Generator",
-            "tags": "latest,max-image,ppc64le"
+            "tags": "caption,max-image,ppc64le"
         },
         "name": "max-image"
     },
@@ -188,11 +188,11 @@
             "value": ""
         },
         {
-            "description": "Version of MAX Image Caption Generatorto be used (latest).",
+            "description": "Version of MAX Image Caption Generator to be used (caption).",
             "displayName": "Version of MAX Image Caption Generator Image",
             "name": "MAX_VERSION",
             "required": true,
-            "value": "latest"
+            "value": "caption"
         }
     ]
 }

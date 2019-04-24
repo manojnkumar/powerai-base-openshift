@@ -189,7 +189,7 @@
             "value": ""
         },
         {
-            "description": "Version of MAX Image Caption Generatorto be used (web-app).",
+            "description": "Version of MAX Image Caption Generator to be used (web-app).",
             "displayName": "Version of MAX Image Caption Web App Image",
             "name": "MAX_VERSION",
             "required": true,
