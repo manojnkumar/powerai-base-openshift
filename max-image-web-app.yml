@@ -9,7 +9,7 @@
         "annotations": {
             "description": "MAX Image Caption Generator Web App. For more information about using this template, see https://github.com/IBM/MAX-Image-Caption-Generator-Web-App.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
             "iconClass": "icon-decisionserver",
-            "openshift.io/display-name": "MAX Image Caption Web App",
+            "openshift.io/display-name": "MAX Image(Web App)",
             "openshift.io/documentation-url": "https://github.com/IBM/MAX-Image-Caption-Generator",
             "openshift.io/long-description": "This template provides a standalone MAX image caption generator Web App.",
             "openshift.io/provider-display-name": "IBM",

@@ -15,7 +15,7 @@
               "iconClass": "icon-decisionserver",
               "openshift.io/display-name": "MAX (Latest)",
               "openshift.io/provider-display-name": "IBM",
-              "tags": "builder,max-image,ppc64le"
+              "tags": "caption,web-app,object,max-image,ppc64le"
             },
             "from": {
               "kind": "ImageStreamTag",
@@ -30,7 +30,7 @@
             "annotations": {
               "description": "Run the MAX Image Caption Generator Web App.",
               "iconClass": "icon-decisionserver",
-              "openshift.io/display-name": "MAX (Latest)",
+              "openshift.io/display-name": "MAX Image(Web App)",
               "openshift.io/provider-display-name": "IBM",
               "supports": "max-image:web-app,max-image",
               "tags": "builder,max-image",
@@ -49,7 +49,7 @@
             "annotations": {
               "description": "Run the MAX Image Caption Generator.",
               "iconClass": "icon-decisionserver",
-              "openshift.io/display-name": "MAX (Latest)",
+              "openshift.io/display-name": "MAX Image(Caption)",
               "openshift.io/provider-display-name": "IBM",
               "supports": "max-image:caption,max-image",
               "tags": "builder,max-image",
