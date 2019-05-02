@@ -47,6 +47,44 @@
           },
           {
             "annotations": {
+              "description": "Run the MAX Facial Recognizer.",
+              "iconClass": "icon-decisionserver",
+              "openshift.io/display-name": "MAX Facial (Recognizer)",
+              "openshift.io/provider-display-name": "IBM",
+              "supports": "max-image:facial,max-image",
+              "tags": "builder,max-image",
+              "version": "facial"
+            },
+            "from": {
+              "kind": "DockerImage",
+              "name": "docker.io/manojnkumar/max-image:facial"
+            },
+            "name": "facial",
+            "referencePolicy": {
+              "type": "Local"
+            }
+          },
+          {
+            "annotations": {
+              "description": "Run the PowerAI Vision Live Demo.",
+              "iconClass": "icon-decisionserver",
+              "openshift.io/display-name": "PowerAI Vision(Live)",
+              "openshift.io/provider-display-name": "IBM",
+              "supports": "max-image:live,max-image",
+              "tags": "builder,max-image",
+              "version": "live"
+            },
+            "from": {
+              "kind": "DockerImage",
+              "name": "docker.io/manojnkumar/max-image:live"
+            },
+            "name": "live",
+            "referencePolicy": {
+              "type": "Local"
+            }
+          },
+          {
+            "annotations": {
               "description": "Run the MAX Image Caption Generator.",
               "iconClass": "icon-decisionserver",
               "openshift.io/display-name": "MAX Image(Caption)",

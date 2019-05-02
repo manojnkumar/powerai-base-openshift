@@ -1,0 +1,221 @@
+{
+    "apiVersion": "v1",
+    "kind": "Template",
+    "labels": {
+        "template": "max-live-template"
+    },
+    "message": "The following service(s) have been created in your project: ${MAX_SERVICE_NAME}.\n\n       For more information about using this template, including OpenShift considerations, see https://github.com/IBM/PowerAI/.",
+    "metadata": {
+        "annotations": {
+            "description": "MAX Inference service, without persistent storage. For more information about using this template, see https://github.com/IBM/MAX-Facial-Recognizer/.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing",
+            "iconClass": "icon-datagrid",
+            "openshift.io/display-name": "PowerAI Vision(Live)",
+            "openshift.io/documentation-url": "https://github.com/IBM/MAX-Facial-Recognizer/",
+            "openshift.io/long-description": "This template provides a standalone MAX live recognizer.",
+            "openshift.io/provider-display-name": "IBM",
+            "openshift.io/support-url": "https://github.com/IBM/MAX-Facial-Recognizer/",
+            "tags": "caption,max-live,ppc64le"
+        },
+        "name": "max-live"
+    },
+    "objects": [
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "name": "${MAX_SERVICE_NAME}"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "max-live",
+                        "nodePort": 0,
+                        "port": 5001,
+                        "protocol": "TCP",
+                        "targetPort": 5001
+                    }
+                ],
+                "selector": {
+                    "name": "${MAX_SERVICE_NAME}"
+                },
+                "sessionAffinity": "None",
+                "type": "ClusterIP"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Route",
+            "metadata": {
+                "name": "${MAX_SERVICE_NAME}"
+            },
+            "spec": {
+                "host": "${APPLICATION_DOMAIN}",
+                "to": {
+                    "kind": "Service",
+                    "name": "${MAX_SERVICE_NAME}"
+                }
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "DeploymentConfig",
+            "metadata": {
+                "annotations": {
+                    "template.alpha.openshift.io/wait-for-ready": "true"
+                },
+                "name": "${MAX_SERVICE_NAME}"
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "name": "${MAX_SERVICE_NAME}"
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "${MAX_SERVICE_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "capabilities": {},
+                                "image": " ",
+                                "command": ["python"],
+                                "args": ["/opt/DNN/bin/deploy_zipped_model.pyc", "--gpu", "0"],
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "touch",
+                                            "/config/dropins/model.zip"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 120,
+                                    "timeoutSeconds": 10
+                                },
+                                "name": "max-live",
+                                "readinessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "touch",
+                                            "/config/dropins/model.zip"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "timeoutSeconds": 1
+                                },
+        			"seLinuxOptions": {
+				    "type": "nvidia_container_t"
+				},
+                                "env": [
+                                    {
+                                        "name": "LICENSE",
+                                        "value": "yes"
+                                    },
+                                    {
+                                        "name": "BASE",
+                                        "value": "CAFFE"
+                                    },
+                                    {
+                                        "name": "ACTIVATE",
+                                        "value": "caffe"
+                                    },
+                                    {
+                                        "name": "IBM_POWERAI_LICENSE_ACCEPT",
+                                        "value": "yes"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "${MEMORY_LIMIT}",
+                                        "nvidia.com/gpu": "${GPU_LIMIT}"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {},
+                                    "privileged": false
+                                },
+                                "terminationMessagePath": "/dev/termination-log"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always",
+                        "serviceAccount": "mysvcacct",
+                        "serviceAccountName": "mysvcacct"
+                    }
+                },
+                "triggers": [
+                    {
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "max-live"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "max-image:${MAX_VERSION}",
+                                "namespace": "${NAMESPACE}"
+                            },
+                            "lastTriggeredImage": ""
+                        },
+                        "type": "ImageChange"
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ]
+            },
+            "status": {}
+        }
+    ],
+    "parameters": [
+        {
+            "description": "Minimum amount of memory the container can use.",
+            "displayName": "Memory Limit",
+            "name": "MEMORY_LIMIT",
+            "required": true,
+            "value": "16Gi"
+        },
+        {
+            "description": "Minimum number of GPUs the container can use.",
+            "displayName": "GPU Limit",
+            "name": "GPU_LIMIT",
+            "required": true,
+            "value": "1"
+        },
+        {
+            "description": "The OpenShift Namespace where the ImageStream resides.",
+            "displayName": "Namespace",
+            "name": "NAMESPACE",
+            "value": "openshift"
+        },
+        {
+            "description": "The name of the OpenShift Service exposed for MAX Facial Recognizer.",
+            "displayName": "MAX Facial Recognizer Name",
+            "name": "MAX_SERVICE_NAME",
+            "required": true,
+            "value": "max-live"
+        },
+        {
+            "description": "The exposed hostname that will route to the max service, if left blank a value will be defaulted.",
+            "displayName": "Application Hostname",
+            "name": "APPLICATION_DOMAIN",
+            "value": ""
+        },
+        {
+            "description": "Version of MAX Facial Recognizerto be used (caption).",
+            "displayName": "Version of MAX Facial Recognizer Image",
+            "name": "MAX_VERSION",
+            "required": true,
+            "value": "live"
+        }
+    ]
+}
+
